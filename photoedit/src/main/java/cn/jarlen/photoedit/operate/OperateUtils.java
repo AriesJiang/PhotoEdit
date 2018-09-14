@@ -206,6 +206,7 @@ public class OperateUtils
 				R.drawable.delete);
 		textObj = new TextObject(activity, text, x, y, rotateBm, deleteBm);
 		textObj.setTextObject(true);
+		textObj.initTextPosition(width, height);
 		return textObj;
 	}
 

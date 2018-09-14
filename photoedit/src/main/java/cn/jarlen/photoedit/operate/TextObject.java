@@ -22,6 +22,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * @author jarlen
@@ -29,10 +31,12 @@ import android.graphics.Typeface;
 public class TextObject extends ImageObject
 {
 
-	private int textSize = 90;
+	private int textSize = 400;
+	private final int textSizeMax = 400;
 	private int color = Color.BLACK;
 	private String typeface;
 	private String text;
+	private String textOld;
 	private boolean bold = false;
 	private boolean italic = false;
 	private Context context;
@@ -61,15 +65,30 @@ public class TextObject extends ImageObject
 		super(text);
 		this.context = context;
 		this.text = text;
+		this.textOld = null;
 		mPoint.x = x;
 		mPoint.y = y;
 		this.rotateBm = rotateBm;
 		this.deleteBm = deleteBm;
 		regenerateBitmap();
+		setScale(0.3f);
+	}
+
+	public void initTextPosition(int width, int height) {
+		mPoint.x = (int) Math.max(width - srcBm.getWidth() * getScale() + srcBm.getWidth() * getScale()/2 - rotateBm.getWidth(), 0);
+		mPoint.y = (int) Math.max(height - srcBm.getHeight() * getScale() + srcBm.getHeight() * getScale()/2  - rotateBm.getHeight(), 0);
+		Log.d("TextObject","initTextPosition mPoint.x=" + mPoint.x + ", mPoint.y=" + mPoint.y);
+
 	}
 
 	public TextObject()
 	{
+	}
+
+	@Override
+	public void setScale(float Scale) {
+		super.setScale(Scale);
+		regenerateBitmap();
 	}
 
 	/**
@@ -77,6 +96,13 @@ public class TextObject extends ImageObject
 	 */
 	public void regenerateBitmap()
 	{
+		if (textSize == textSizeMax && TextUtils.equals(textOld, text)) {
+			return;
+		}
+		this.textOld = text;
+		textSize = (int) Math.ceil(textSize * mScale);
+		Log.d("TextObject","TextObject=" + this + ", textSize=" + textSize);
+		textSize = Math.min(textSizeMax, textSize);
 		paint.setAntiAlias(true);
 		paint.setTextSize(textSize);
 		paint.setTypeface(getTypefaceObj());

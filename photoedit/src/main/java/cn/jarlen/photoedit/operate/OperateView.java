@@ -20,11 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.Rect;
+import android.graphics.*;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -66,6 +62,7 @@ public class OperateView extends View
 		int width = bgBmp.getWidth();
 		int height = bgBmp.getHeight();
 		mCanvasLimits = new Rect(0, 0, width, height);
+		paint.setAntiAlias(true);
 	}
 
 	/**
@@ -106,6 +103,7 @@ public class OperateView extends View
 	{
 		super.onDraw(canvas);
 		int sc = canvas.save();
+		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
 		canvas.clipRect(mCanvasLimits);
 		canvas.drawBitmap(bgBmp, 0, 0, paint);
 		drawImages(canvas);
