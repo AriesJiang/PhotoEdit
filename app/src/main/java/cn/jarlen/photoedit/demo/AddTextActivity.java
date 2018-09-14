@@ -224,7 +224,7 @@ public class AddTextActivity extends Activity implements View.OnClickListener {
                         // }
 
                         TextObject textObj = operateUtils.getTextObject(string,
-                                operateView, OperateUtils.RIGHTBOTTOM, 150, 100);
+                                operateView, OperateUtils.CENTER);
                         if(textObj != null){
                             if (menuWindow != null)
                             {

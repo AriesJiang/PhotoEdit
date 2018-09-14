@@ -50,35 +50,50 @@ public class TextObject extends ImageObject
 	 *            上下文
 	 * @param text
 	 *            输入的文字
-	 * @param x
-	 *            位置x坐标
-	 * @param y
-	 *            位置y坐标
 	 * @param rotateBm
 	 *            旋转按钮的图片
 	 * @param deleteBm
 	 *            删除按钮的图片
+     *            https://blog.csdn.net/momo_ibeike/article/details/60324344
 	 */
-	public TextObject(Context context, String text, int x, int y,
+	public TextObject(Context context, String text, int quadrant, int width, int height,
 			Bitmap rotateBm, Bitmap deleteBm)
 	{
 		super(text);
 		this.context = context;
 		this.text = text;
 		this.textOld = null;
-		mPoint.x = x;
-		mPoint.y = y;
 		this.rotateBm = rotateBm;
 		this.deleteBm = deleteBm;
 		regenerateBitmap();
 		setScale(0.3f);
-	}
 
-	public void initTextPosition(int width, int height) {
-		mPoint.x = (int) Math.max(width - srcBm.getWidth() * getScale() + srcBm.getWidth() * getScale()/2 - rotateBm.getWidth(), 0);
-		mPoint.y = (int) Math.max(height - srcBm.getHeight() * getScale() + srcBm.getHeight() * getScale()/2  - rotateBm.getHeight(), 0);
+		switch (quadrant)
+		{
+			case OperateUtils.LEFTTOP :
+				mPoint.x = (int) Math.max(srcBm.getWidth() * getScale()/2 + deleteBm.getWidth(), 0);
+				mPoint.y = (int) Math.max(srcBm.getHeight() * getScale()/2  + deleteBm.getHeight(), 0);
+				break;
+			case OperateUtils.RIGHTTOP :
+				mPoint.x = (int) Math.max(width - srcBm.getWidth() * getScale() + srcBm.getWidth() * getScale()/2 - rotateBm.getWidth(), 0);
+				mPoint.y = (int) Math.max(srcBm.getHeight() * getScale()/2  + deleteBm.getHeight(), 0);
+				break;
+			case OperateUtils.LEFTBOTTOM :
+				mPoint.x = (int) Math.max(srcBm.getWidth() * getScale()/2 + deleteBm.getWidth(), 0);
+				mPoint.y = (int) Math.max(height - srcBm.getHeight() * getScale() + srcBm.getHeight() * getScale()/2  - rotateBm.getHeight(), 0);
+				break;
+			case OperateUtils.RIGHTBOTTOM :
+				mPoint.x = (int) Math.max(width - srcBm.getWidth() * getScale() + srcBm.getWidth() * getScale()/2 - rotateBm.getWidth(), 0);
+				mPoint.y = (int) Math.max(height - srcBm.getHeight() * getScale() + srcBm.getHeight() * getScale()/2  - rotateBm.getHeight(), 0);
+				break;
+			case OperateUtils.CENTER :
+				mPoint.x = width / 2;
+				mPoint.y = height / 2;
+				break;
+			default :
+				break;
+		}
 		Log.d("TextObject","initTextPosition mPoint.x=" + mPoint.x + ", mPoint.y=" + mPoint.y);
-
 	}
 
 	public TextObject()
@@ -121,15 +136,20 @@ public class TextObject extends ImageObject
 		}
 		if (textWidth < 1)
 			textWidth = 1;
+
+		Paint.FontMetrics fontMetrics = paint.getFontMetrics();
+		int textHeight = (int) Math.ceil(fontMetrics.bottom - fontMetrics.top);
+		Log.d("TextObject","textHeight=" + textHeight + ", textSize=" + textSize);
+
 		if (srcBm != null)
 			srcBm.recycle();
-		srcBm = Bitmap.createBitmap(textWidth, textSize * (lines.length) + 8,
+		srcBm = Bitmap.createBitmap(textWidth, textHeight * (lines.length) + 8,
 				Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(srcBm);
 		canvas.drawARGB(0, 0, 0, 0);
 		for (int i = 1; i <= lines.length; i++)
 		{
-			canvas.drawText(lines[i - 1], 0, i * textSize, paint);
+			canvas.drawText(lines[i - 1], 0, i * textHeight, paint);
 		}
 		setCenter();
 	}

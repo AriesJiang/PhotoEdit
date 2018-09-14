@@ -129,31 +129,6 @@ public class OperateUtils
 	}
 
 	/**
-	 * 添加文字方法
-	 * 
-	 * @param text
-	 *            所添加的文字
-	 * @return TextObject 返回的字体图片对象
-	 */
-	public TextObject getTextObject(String text)
-	{
-		TextObject textObj = null;
-		if (TextUtils.isEmpty(text))
-		{
-			Toast.makeText(activity, "请添加文字", Toast.LENGTH_SHORT).show();
-			return null;
-		}
-
-		Bitmap rotateBm = BitmapFactory.decodeResource(activity.getResources(),
-				R.drawable.rotate);
-		Bitmap deleteBm = BitmapFactory.decodeResource(activity.getResources(),
-				R.drawable.delete);
-
-		textObj = new TextObject(activity, text, 150, 150, rotateBm, deleteBm);
-		textObj.setTextObject(true);
-		return textObj;
-	}
-	/**
 	 * 添加图片的方法
 	 * 
 	 * @param text
@@ -162,14 +137,9 @@ public class OperateUtils
 	 *            容器View对象
 	 * @param quadrant
 	 *            需要图片显示的区域 （1、左上方，2、右上方，3、左下方，4、右下方，5、中心）
-	 * @param x
-	 *            离边界x坐标
-	 * @param y
-	 *            离边界y坐标
 	 * @return
 	 */
-	public TextObject getTextObject(String text, OperateView operateView,
-			int quadrant, int x, int y)
+	public TextObject getTextObject(String text, OperateView operateView, int quadrant)
 	{
 		TextObject textObj = null;
 		if (TextUtils.isEmpty(text))
@@ -179,34 +149,13 @@ public class OperateUtils
 		}
 		int width = operateView.getWidth();
 		int height = operateView.getHeight();
-		switch (quadrant)
-		{
-			case LEFTTOP :
-				break;
-			case RIGHTTOP :
-				x = width - x;
-				break;
-			case LEFTBOTTOM :
-				y = height - y;
-				break;
-			case RIGHTBOTTOM :
-				x = width - x;
-				y = height - y;
-				break;
-			case CENTER :
-				x = width / 2;
-				y = height / 2;
-				break;
-			default :
-				break;
-		}
+
 		Bitmap rotateBm = BitmapFactory.decodeResource(activity.getResources(),
 				R.drawable.rotate);
 		Bitmap deleteBm = BitmapFactory.decodeResource(activity.getResources(),
 				R.drawable.delete);
-		textObj = new TextObject(activity, text, x, y, rotateBm, deleteBm);
+		textObj = new TextObject(activity, text, quadrant, width, height, rotateBm, deleteBm);
 		textObj.setTextObject(true);
-		textObj.initTextPosition(width, height);
 		return textObj;
 	}
 
