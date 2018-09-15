@@ -105,8 +105,8 @@ public class OperateView extends View
 		int sc = canvas.save();
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
 		canvas.clipRect(mCanvasLimits);
-		canvas.drawBitmap(bgBmp, 0, 0, paint);
-		drawImages(canvas);
+//		canvas.drawBitmap(bgBmp, 0, 0, paint);
+		canvas.drawARGB(0, 0, 0, 0);drawImages(canvas);
 		canvas.restoreToCount(sc);
 		for (ImageObject ad : imgLists)
 		{

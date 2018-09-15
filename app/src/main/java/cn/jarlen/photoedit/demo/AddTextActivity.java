@@ -185,13 +185,15 @@ public class AddTextActivity extends Activity implements View.OnClickListener {
             File dir = new File(Constants.filePath);
             if (!dir.exists())
                 dir.mkdir();
-            File file = new File(Constants.filePath + name + ".jpg");
+//            File file = new File(Constants.filePath + name + ".jpg");
+            File file = new File(Constants.filePath + name + ".png");
             FileOutputStream out;
 
             try
             {
                 out = new FileOutputStream(file);
-                if (bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out))
+//                if (bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out))
+                if (bitmap.compress(Bitmap.CompressFormat.PNG, 100, out))
                 {
                     out.flush();
                     out.close();

@@ -33,7 +33,7 @@ public class TextObject extends ImageObject
 
 	private int textSize = 400;
 	private final int textSizeMax = 400;
-	private int color = Color.BLACK;
+	private int color = Color.YELLOW ;
 	private String typeface;
 	private String text;
 	private String textOld;
