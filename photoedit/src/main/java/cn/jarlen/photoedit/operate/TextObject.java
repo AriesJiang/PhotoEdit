@@ -139,7 +139,8 @@ public class TextObject extends ImageObject
 
 		Paint.FontMetrics fontMetrics = paint.getFontMetrics();
 		int textHeight = (int) Math.ceil(fontMetrics.bottom - fontMetrics.top);
-		Log.d("TextObject","textHeight=" + textHeight + ", textSize=" + textSize);
+		int baseline = (int) ((textHeight - fontMetrics.bottom - fontMetrics.top) / 2);
+		Log.d("TextObject","textHeight=" + textHeight + ", textSize=" + textSize + ", baseline=" + baseline);
 
 		if (srcBm != null)
 			srcBm.recycle();
@@ -149,7 +150,7 @@ public class TextObject extends ImageObject
 		canvas.drawARGB(0, 0, 0, 0);
 		for (int i = 1; i <= lines.length; i++)
 		{
-			canvas.drawText(lines[i - 1], 0, i * textHeight, paint);
+			canvas.drawText(lines[i - 1], 0, baseline + (i - 1) * textHeight, paint);
 		}
 		setCenter();
 	}
