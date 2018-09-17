@@ -106,7 +106,7 @@ public class ImageObject
 		mPaintRect.setAntiAlias(true);// 去掉边缘锯齿
 		mPaintRect.setStrokeWidth(4);// 设置线宽
 		mPaintRect.setColor(Color.parseColor("#b3b3b3"));
-		mPaintRect.setPathEffect(new DashPathEffect(new float[]{4, 4}, 0));
+		mPaintRect.setPathEffect(new DashPathEffect(new float[]{20, 8}, 0)); //20实线长度，8虚线长度  phase：偏移量
 	}
 
 	int first = 0;// 判断是否第一次
