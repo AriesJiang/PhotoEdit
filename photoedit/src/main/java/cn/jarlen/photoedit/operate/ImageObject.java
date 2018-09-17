@@ -336,23 +336,19 @@ public class ImageObject
 	public boolean pointOnCorner(float x, float y, int type)
 	{
 		PointF point = null;
-		float delX = 0;
-		float delY = 0;
-		if (OperateConstants.LEFTTOP == type)
-		{
+		PointF pointLeftTop = null;
+		PointF pointRightBottom = null;
+		if (OperateConstants.LEFTTOP == type) {
 			point = getPointLeftTop();
-			delX = x - (point.x - deleteBm.getWidth() / 2);
-            		delY = y - (point.y - deleteBm.getHeight() / 2);
-		} else if (OperateConstants.RIGHTBOTTOM == type)
-		{
+			pointLeftTop = new PointF((point.x - deleteBm.getWidth() / 2), (point.y - deleteBm.getHeight() / 2));
+			pointRightBottom = new PointF((point.x + deleteBm.getWidth() / 2), (point.y + deleteBm.getHeight() / 2));
+
+		} else if (OperateConstants.RIGHTBOTTOM == type) {
 			point = getPointRightBottom();
-			delX = x - (point.x + rotateBm.getWidth() / 2);
-			delY = y - (point.y + rotateBm.getHeight() / 2);
+			pointLeftTop = new PointF((point.x - rotateBm.getWidth() / 2), (point.y - rotateBm.getHeight() / 2));
+			pointRightBottom = new PointF((point.x + rotateBm.getWidth() / 2), (point.y + rotateBm.getHeight() / 2));
 		}
-		float diff = (float) Math.sqrt((delX * delX + delY * delY));
-		// float del = rotateBm.getWidth() / 2;
-		if (Math.abs(diff) <= resizeBoxSize)
-		{
+		if (pointLeftTop.x <= x && pointLeftTop.y <= y && x <= pointRightBottom.x && y <= pointRightBottom.y) {
 			return true;
 		}
 		return false;

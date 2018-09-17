@@ -278,28 +278,20 @@ public class OperateView extends View
 				mResizeAndRotateSinceDown = false;
 				int selectedId = -1;
 
-				for (int i = imgLists.size() - 1; i >= 0; --i)
-				{
+				for (int i = imgLists.size() - 1; i >= 0; --i) {
 					ImageObject io = imgLists.get(i);
 					if (io.contains(event.getX(), event.getY())
-							|| io.pointOnCorner(event.getX(), event.getY(),
-									OperateConstants.RIGHTBOTTOM)
-							|| io.pointOnCorner(event.getX(), event.getY(),
-									OperateConstants.LEFTTOP))
-					{
+							|| io.pointOnCorner(event.getX(), event.getY(), OperateConstants.RIGHTBOTTOM)
+							|| io.pointOnCorner(event.getX(), event.getY(), OperateConstants.LEFTTOP)) {
 						io.setSelected(true);
 						imgLists.remove(i);
 						imgLists.add(io);
 						selectedId = imgLists.size() - 1;
 						currentTime = System.currentTimeMillis();
-						if (currentTime - selectTime < 300)
-						{
-							if (myListener != null)
-							{
-								if (getSelected().isTextObject())
-								{
-									myListener
-											.onClick((TextObject) getSelected());
+						if (currentTime - selectTime < 300) {
+							if (myListener != null) {
+								if (getSelected().isTextObject()) {
+									myListener.onClick((TextObject) getSelected());
 								}
 							}
 						}
@@ -307,17 +299,14 @@ public class OperateView extends View
 						break;
 					}
 				}
-				if (selectedId < 0)
-				{
-					for (int i = imgLists.size() - 1; i >= 0; --i)
-					{
+				if (selectedId < 0) {
+					for (int i = imgLists.size() - 1; i >= 0; --i) {
 						ImageObject io = imgLists.get(i);
 						if (io.contains(event.getX(), event.getY())
 								|| io.pointOnCorner(event.getX(), event.getY(),
 										OperateConstants.RIGHTBOTTOM)
 								|| io.pointOnCorner(event.getX(), event.getY(),
-										OperateConstants.LEFTTOP))
-						{
+										OperateConstants.LEFTTOP)) {
 							io.setSelected(true);
 							imgLists.remove(i);
 							imgLists.add(io);
