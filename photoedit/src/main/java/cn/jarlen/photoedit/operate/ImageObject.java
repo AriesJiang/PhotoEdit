@@ -19,22 +19,24 @@ package cn.jarlen.photoedit.operate;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.graphics.Bitmap;
+import android.graphics.*;
 import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.PointF;
 
 /**
  * @author jarlen
  */
 public class ImageObject
 {
+	/**
+	 * text or image center point x/y
+	 * 贴图中心点位置，同时作为旋转的中心点
+	 */
 	protected Point mPoint = new Point();
 	protected float mRotation;
 	protected float mScale = 1.0f;
+	/**
+	 * 是否选中
+	 */
 	protected boolean mSelected;
 	protected boolean flipVertical;
 	protected boolean flipHorizontal;
@@ -43,21 +45,18 @@ public class ImageObject
 	protected Bitmap srcBm;
 	protected Bitmap rotateBm;
 	protected Bitmap deleteBm;
-	Paint paint = new Paint();
+	private Paint paintBitmap = new Paint();
+	private Paint mPaintRect = new Paint();
 
 	private Canvas canvas = null;
 
 	/**
 	 * 构造方法
 	 */
-	public ImageObject()
-	{
-
+	public ImageObject() {
+		initPaint();
 	}
-	public ImageObject(String text)
-	{
 
-	}
 	/**
 	 * 构造方法
 	 * @param srcBm 源图片
@@ -69,12 +68,13 @@ public class ImageObject
 		this.srcBm = Bitmap.createBitmap(srcBm.getWidth(), srcBm.getHeight(),
 				Config.ARGB_8888);
 		canvas = new Canvas(this.srcBm);
-		canvas.drawBitmap(srcBm, 0, 0, paint);
+		canvas.drawBitmap(srcBm, 0, 0, paintBitmap);
 		this.rotateBm = rotateBm;
 		this.deleteBm = deleteBm;
-		paint.setColor(Color.WHITE);
-		paint.setAntiAlias(true);// 去掉边缘锯齿
-		paint.setStrokeWidth(2);// 设置线宽
+		paintBitmap.setColor(Color.WHITE);
+		paintBitmap.setAntiAlias(true);// 去掉边缘锯齿
+		paintBitmap.setStrokeWidth(2);// 设置线宽
+		initPaint();
 	}
 	/**
 	 * 构造方法
@@ -90,14 +90,23 @@ public class ImageObject
 		this.srcBm = Bitmap.createBitmap(srcBm.getWidth(), srcBm.getHeight(),
 				Config.ARGB_8888);
 		canvas = new Canvas(this.srcBm);
-		canvas.drawBitmap(srcBm, 0, 0, paint);
+		canvas.drawBitmap(srcBm, 0, 0, paintBitmap);
 		mPoint.x = x;
 		mPoint.y = y;
 		this.rotateBm = rotateBm;
 		this.deleteBm = deleteBm;
-		paint.setColor(Color.WHITE);
-		paint.setAntiAlias(true);// 去掉边缘锯齿
-		paint.setStrokeWidth(2);// 设置线宽
+		paintBitmap.setColor(Color.WHITE);
+		paintBitmap.setAntiAlias(true);// 去掉边缘锯齿
+		paintBitmap.setStrokeWidth(2);// 设置线宽
+		initPaint();
+	}
+
+	private void initPaint() {
+		mPaintRect.setStyle(Paint.Style.STROKE);
+		mPaintRect.setAntiAlias(true);// 去掉边缘锯齿
+		mPaintRect.setStrokeWidth(4);// 设置线宽
+		mPaintRect.setColor(Color.parseColor("#b3b3b3"));
+		mPaintRect.setPathEffect(new DashPathEffect(new float[]{4, 4}, 0));
 	}
 
 	int first = 0;// 判断是否第一次
@@ -158,7 +167,28 @@ public class ImageObject
 			int sc2 = canvas.save();
 			canvas.rotate((float) mRotation);
 			canvas.scale((flipHorizontal ? -1 : 1), (flipVertical ? -1 : 1));
-			canvas.drawBitmap(srcBm, -getWidth() / 2, -getHeight() / 2, paint);
+			canvas.drawBitmap(srcBm, -getWidth() / 2, -getHeight() / 2, paintBitmap);
+			canvas.restoreToCount(sc2);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		canvas.restoreToCount(sc);
+	}
+
+	public void drawRect(Canvas canvas)
+	{
+		int sc = canvas.save();
+		try
+		{
+			canvas.translate(mPoint.x, mPoint.y);
+			canvas.scale((float) mScale, (float) mScale);
+			int sc2 = canvas.save();
+			canvas.rotate((float) mRotation);
+			canvas.scale((flipHorizontal ? -1 : 1), (flipVertical ? -1 : 1));
+			if (srcBm != null && !srcBm.isRecycled()) {
+				canvas.drawRect(-getWidth() / 2, -getHeight() / 2, getWidth() / 2, getHeight() / 2, mPaintRect);
+			}
 			canvas.restoreToCount(sc2);
 		} catch (Exception e)
 		{
@@ -385,10 +415,10 @@ public class ImageObject
 	{
 		PointF deletePF = getPointLeftTop();
 		canvas.drawBitmap(deleteBm, deletePF.x - deleteBm.getWidth() / 2,
-				deletePF.y - deleteBm.getHeight() / 2, paint);
+				deletePF.y - deleteBm.getHeight() / 2, paintBitmap);
 		PointF rotatePF = getPointRightBottom();
 		canvas.drawBitmap(rotateBm, rotatePF.x - rotateBm.getWidth() / 2,
-				rotatePF.y - rotateBm.getHeight() / 2, paint);
+				rotatePF.y - rotateBm.getHeight() / 2, paintBitmap);
 	}
 
 	/**

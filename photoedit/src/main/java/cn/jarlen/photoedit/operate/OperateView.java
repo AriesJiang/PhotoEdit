@@ -105,26 +105,44 @@ public class OperateView extends View
 		int sc = canvas.save();
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
 		canvas.clipRect(mCanvasLimits);
-//		canvas.drawBitmap(bgBmp, 0, 0, paint);
-		canvas.drawARGB(0, 0, 0, 0);drawImages(canvas);
+		canvas.drawBitmap(bgBmp, 0, 0, paint);
+//		canvas.drawARGB(0, 0, 0, 0);
+		drawImages(canvas);
 		canvas.restoreToCount(sc);
 		for (ImageObject ad : imgLists)
 		{
 			if (ad != null && ad.isSelected())
 			{
+				ad.drawRect(canvas);
 				ad.drawIcon(canvas);
 			}
 		}
 	}
 
-	public void save()
+    /**
+     * 外部要求保存贴图
+     * @return
+     */
+	public Bitmap save()
 	{
 		ImageObject io = getSelected();
 		if (io != null)
 		{
 			io.setSelected(false);
 		}
-		invalidate();
+		return getBitmapByView();
+	}
+
+	/**
+	 * 将模板View的图片转化为Bitmap
+	 * @return
+	 */
+	private Bitmap getBitmapByView() {
+		Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(),
+				Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		draw(canvas);
+		return bitmap;
 	}
 
 	/**
@@ -435,6 +453,6 @@ public class OperateView extends View
 
 	public interface MyListener
 	{
-		public void onClick(TextObject tObject);
+		void onClick(TextObject tObject);
 	}
 }

@@ -17,11 +17,7 @@
 package cn.jarlen.photoedit.operate;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
+import android.graphics.*;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -41,7 +37,7 @@ public class TextObject extends ImageObject
 	private boolean italic = false;
 	private Context context;
 
-	Paint paint = new Paint();
+	private Paint paint = new Paint();
 
 	/**
 	 * 构造方法
@@ -59,7 +55,7 @@ public class TextObject extends ImageObject
 	public TextObject(Context context, String text, int quadrant, int width, int height,
 			Bitmap rotateBm, Bitmap deleteBm)
 	{
-		super(text);
+		super();
 		this.context = context;
 		this.text = text;
 		this.textOld = null;
@@ -67,6 +63,7 @@ public class TextObject extends ImageObject
 		this.deleteBm = deleteBm;
 		regenerateBitmap();
 		setScale(0.3f);
+		regenerateBitmap();
 
 		switch (quadrant)
 		{
@@ -98,12 +95,6 @@ public class TextObject extends ImageObject
 
 	public TextObject()
 	{
-	}
-
-	@Override
-	public void setScale(float Scale) {
-		super.setScale(Scale);
-		regenerateBitmap();
 	}
 
 	/**
@@ -139,15 +130,17 @@ public class TextObject extends ImageObject
 
 		Paint.FontMetrics fontMetrics = paint.getFontMetrics();
 		int textHeight = (int) Math.ceil(fontMetrics.bottom - fontMetrics.top);
-		int baseline = (int) ((textHeight - fontMetrics.bottom - fontMetrics.top) / 2);
+		int baseline = (int) ((textHeight - fontMetrics.bottom - fontMetrics.top) / 2); //调整基准线，使得整个text绘制出来后居中显示
 		Log.d("TextObject","textHeight=" + textHeight + ", textSize=" + textSize + ", baseline=" + baseline);
 
+		int bitmapWidth = textWidth;
+		int bitmapHeight = textHeight * (lines.length) + 8;
 		if (srcBm != null)
 			srcBm.recycle();
-		srcBm = Bitmap.createBitmap(textWidth, textHeight * (lines.length) + 8,
-				Bitmap.Config.ARGB_8888);
+		srcBm = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(srcBm);
-		canvas.drawARGB(0, 0, 0, 0);
+//		canvas.drawARGB(0, 0, 0, 0);
+		canvas.drawARGB(56, 200, 56, 56);
 		for (int i = 1; i <= lines.length; i++)
 		{
 			canvas.drawText(lines[i - 1], 0, baseline + (i - 1) * textHeight, paint);

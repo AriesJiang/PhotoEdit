@@ -136,8 +136,7 @@ public class AddWatermarkActivity extends Activity implements View.OnClickListen
 
     private void btnSave()
     {
-        operateView.save();
-        Bitmap bmp = getBitmapByView(operateView);
+        Bitmap bmp = operateView.save();
         if (bmp != null)
         {
             mPath = saveBitmap(bmp, "saveTemp");
@@ -146,16 +145,6 @@ public class AddWatermarkActivity extends Activity implements View.OnClickListen
             setResult(RESULT_OK, okData);
             this.finish();
         }
-    }
-
-    // 将模板View的图片转化为Bitmap
-    public Bitmap getBitmapByView(View v)
-    {
-        Bitmap bitmap = Bitmap.createBitmap(v.getWidth(), v.getHeight(),
-                Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        v.draw(canvas);
-        return bitmap;
     }
 
     // 将生成的图片保存到内存中
